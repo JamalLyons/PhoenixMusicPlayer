@@ -1,58 +1,58 @@
-# Phoenix Music Player — Public Distribution & Landing Portal
+# Phoenix — Public Landing & Releases
 
 <div align="center">
   <img src="./public/app-icon.png" width="96" height="96" alt="Phoenix Icon" />
-  <h3>The calm, high-fidelity desktop music player built for music you own.</h3>
-  <p>Bit-perfect playback, in-app acquisition, studio-grade 10-band EQ, and deep in-place metadata editing.</p>
+  <h3>Music you own, on your desktop.</h3>
+  <p>Listen free. Unlock Tools with a one-time license—acquisition, tagging, and EQ in one calm app.</p>
 </div>
 
 ---
 
-## 🚀 Distribution & Community
+## Distribution & community
 
-- **Latest Desktop Releases (.dmg, .exe, .deb):** [Releases](https://github.com/JamalLyons/PhoenixMusicPlayer/releases)
-- **Discord Community:** [Join Discord](https://discord.gg/TPCBTUrfNT)
+- **Landing site:** [jamallyons.github.io/PhoenixMusicPlayer](https://jamallyons.github.io/PhoenixMusicPlayer/)
+- **Desktop releases:** [Releases](https://github.com/JamalLyons/PhoenixMusicPlayer/releases)
+- **Discord:** [Join](https://discord.gg/TPCBTUrfNT)
 
----
+## Freemium model
 
-## 🛠️ Local Development (Landing SPA)
+| Tier | Includes |
+|------|----------|
+| **Free** | Local library, playback, playlists, queue, favorites, themes |
+| **Tools** ($29 one-time) | In-app acquisition, staging, metadata editor, bulk/macros, 10-band EQ, dedupe / album builder |
 
-This repository contains the static landing site and release portal built with **Svelte 5**, **Vite**, and **TypeScript**.
+During beta, Tools ship unlocked in the free download while licensing rolls out.
+
+## Local development (landing SPA)
+
+Svelte 5 + Vite + TypeScript static site.
 
 ### Prerequisites
+
 - Node.js 22+
 - `pnpm` 11+
 
-### Quick Start
+### Commands
+
 ```bash
-# Install dependencies
 pnpm install
-
-# Start Vite dev server
 pnpm run dev
-
-# Run type check
 pnpm run check
-
-# Build static production bundle into dist/
 pnpm run build
-
-# Preview build locally
 pnpm run preview
 ```
 
----
+GitHub Pages deploys from `main` via `.github/workflows/pages.yml` (`base: './'`).
 
-## 📦 Releases Matrix
+## Releases matrix
 
 | Platform | Format | Architecture | Compatibility |
 | :--- | :--- | :--- | :--- |
-| **macOS** | `.dmg` | Apple Silicon (`aarch64`) | macOS 11 (Big Sur) or higher |
-| **macOS** | `.dmg` | Intel (`x86_64`) | macOS 11 (Big Sur) or higher |
-| **Windows** | `.exe` / installer | `x64` | Windows 10 (1809+) or Windows 11 |
-| **Linux** | `.deb` / `.AppImage` | `x64` | glibc 2.31+ (Ubuntu 20.04+, Fedora, Arch) |
+| **macOS** | `.dmg` | Apple Silicon (`aarch64`) | macOS 11+ |
+| **macOS** | `.dmg` | Intel (`x86_64`) | macOS 11+ |
+| **Windows** | `.exe` | `x64` | Windows 10 (1809+) / 11 |
+| **Linux** | `.deb` / `.AppImage` | `x64` | glibc 2.31+ |
 
----
+## License
 
-## 📄 License
 Released under the [MIT License](https://opensource.org/licenses/MIT).

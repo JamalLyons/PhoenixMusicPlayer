@@ -5,10 +5,10 @@
   import type { ReleaseInfo } from './lib/types';
   import Navbar from './lib/Navbar.svelte';
   import Hero from './lib/Hero.svelte';
-  import AppPreview from './lib/AppPreview.svelte';
-  import Features from './lib/Features.svelte';
-  import EqShowcase from './lib/EqShowcase.svelte';
-  import TagEditorShowcase from './lib/TagEditorShowcase.svelte';
+  import Problem from './lib/Problem.svelte';
+  import ProductLoop from './lib/ProductLoop.svelte';
+  import ScreenshotGallery from './lib/ScreenshotGallery.svelte';
+  import Pricing from './lib/Pricing.svelte';
   import DownloadPortal from './lib/DownloadPortal.svelte';
   import Footer from './lib/Footer.svelte';
 
@@ -22,13 +22,13 @@
 
 <div class="landing-app">
   <Navbar release={releaseInfo} />
-  
+
   <main>
     <Hero release={releaseInfo} />
-    <AppPreview />
-    <Features />
-    <EqShowcase />
-    <TagEditorShowcase />
+    <Problem />
+    <ProductLoop />
+    <ScreenshotGallery />
+    <Pricing />
     <DownloadPortal release={releaseInfo} />
   </main>
 
@@ -40,6 +40,8 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 1;
   }
 
   main {

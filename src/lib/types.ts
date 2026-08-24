@@ -11,6 +11,8 @@ export interface ReleaseInfo {
   version: string;
   publishedAt: string;
   htmlUrl: string;
+  /** True only when GitHub returned a real latest release with at least one asset. */
+  available: boolean;
   assets: {
     macosArm?: ReleaseAsset;
     macosIntel?: ReleaseAsset;
@@ -30,9 +32,4 @@ export interface PlatformOption {
   downloadUrl?: string;
   filename?: string;
   sizeFormatted?: string;
-}
-
-export interface EqBand {
-  freq: string;
-  gain: number; // -12 to +12 dB
 }

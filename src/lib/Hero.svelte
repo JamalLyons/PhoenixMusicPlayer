@@ -1,15 +1,8 @@
 <script lang="ts">
-  import { detectUserPlatform, getPlatformOptions, formatFileSize } from './releases';
-  import type { ReleaseInfo, PlatformOption } from './types';
-  import { 
-    Download, 
-    ChevronDown, 
-    ShieldCheck, 
-    AudioWaveform, 
-    HardDrive, 
-    SlidersHorizontal, 
-    Sparkles 
-  } from '@lucide/svelte';
+  import { detectUserPlatform, getPlatformOptions } from './releases';
+  import type { ReleaseInfo } from './types';
+  import { LICENSE_WAITLIST_URL } from './pricing';
+  import { Download, ChevronDown } from '@lucide/svelte';
 
   interface Props {
     release?: ReleaseInfo;
@@ -28,332 +21,276 @@
   let primaryPlatform = $derived(
     platformOptions.find((p) => p.key === userPlatform) || platformOptions[0]
   );
+  let hasDownload = $derived(Boolean(primaryPlatform?.downloadUrl));
 </script>
 
-<section class="hero-section">
-  <div class="ambient-bg"></div>
-
-  <div class="container hero-container">
-    <!-- Beta Release Pill -->
-    <div class="badge hero-badge">
-      <Sparkles size={13} />
-      <span>v0.1.0 Beta Public Release</span>
-    </div>
-
-    <!-- Main Title -->
-    <h1 class="hero-headline">
-      The calm, high-fidelity home for music you <span class="accent-text">own</span>.
-    </h1>
-
-    <!-- Subtitle -->
-    <p class="hero-subtitle">
-      Play your local audio collection with studio clarity. Acquire music directly, fix tags and artwork with built-in metadata editing, and shape frequency curves with a 10-band equalizer — all in one native desktop app.
+<section class="hero" aria-labelledby="hero-brand">
+  <div class="hero-copy container">
+    <p class="hero-eyebrow animate-rise" style="animation-delay: 0.05s">Desktop music player</p>
+    <h1 id="hero-brand" class="hero-brand animate-rise" style="animation-delay: 0.12s">Phoenix</h1>
+    <p class="hero-headline animate-rise" style="animation-delay: 0.2s">
+      Music you own, in a home that feels like yours.
+    </p>
+    <p class="hero-sub animate-rise" style="animation-delay: 0.28s">
+      Play your local library. Build playlists. Unlock Tools with a one-time license when you want
+      acquisition, tagging, and EQ in the same calm app.
     </p>
 
-    <!-- Download Action Suite -->
-    <div class="cta-group">
-      <div class="primary-download-wrapper">
-        <a 
-          href={primaryPlatform.downloadUrl || '#download'} 
-          class="btn btn-primary btn-lg primary-cta"
-        >
+    <div class="cta-row animate-rise" style="animation-delay: 0.36s">
+      {#if hasDownload && primaryPlatform}
+        <div class="primary-download">
+          <a href={primaryPlatform.downloadUrl} class="btn btn-primary btn-lg">
+            <Download size={20} />
+            <span>Download free for {primaryPlatform.label}</span>
+          </a>
+          <button
+            type="button"
+            class="btn btn-primary platform-toggle"
+            onclick={() => (showPlatformMenu = !showPlatformMenu)}
+            aria-expanded={showPlatformMenu}
+            aria-label="Choose platform"
+          >
+            <ChevronDown size={18} />
+          </button>
+          {#if showPlatformMenu}
+            <div class="platform-menu glass" role="menu">
+              {#each platformOptions as option}
+                {#if option.downloadUrl}
+                  <a href={option.downloadUrl} class="platform-option" role="menuitem">
+                    <span class="opt-label">{option.label}</span>
+                    <span class="opt-sub">{option.sublabel}</span>
+                  </a>
+                {:else}
+                  <span class="platform-option disabled">
+                    <span class="opt-label">{option.label}</span>
+                    <span class="opt-sub">Coming soon</span>
+                  </span>
+                {/if}
+              {/each}
+            </div>
+          {/if}
+        </div>
+      {:else}
+        <a href="#download" class="btn btn-primary btn-lg">
           <Download size={20} />
-          <div class="cta-text-wrap">
-            <span class="cta-main-text">Download for {primaryPlatform.label}</span>
-            <span class="cta-sub-text">{primaryPlatform.sublabel} ({primaryPlatform.fileExt}{primaryPlatform.sizeFormatted ? ` • ${primaryPlatform.sizeFormatted}` : ''})</span>
-          </div>
+          <span>Download free</span>
         </a>
-
-        <!-- Platform Dropdown Trigger -->
-        <button 
-          class="btn btn-primary platform-dropdown-trigger" 
-          onclick={() => showPlatformMenu = !showPlatformMenu}
-          title="Choose another platform"
-          aria-label="Choose another operating system"
-        >
-          <ChevronDown size={18} />
-        </button>
-
-        {#if showPlatformMenu}
-          <div class="platform-menu glass">
-            <span class="menu-label">Select your platform</span>
-            {#each platformOptions as option}
-              <a 
-                href={option.downloadUrl || '#download'} 
-                class="platform-menu-item"
-                onclick={() => showPlatformMenu = false}
-              >
-                <div class="platform-meta">
-                  <span class="platform-name">{option.label}</span>
-                  <span class="platform-arch">{option.sublabel}</span>
-                </div>
-                <span class="platform-ext">{option.fileExt}</span>
-              </a>
-            {/each}
-          </div>
-        {/if}
-      </div>
-
-      <a href="#features" class="btn btn-secondary btn-lg">
-        Explore Features
-      </a>
+      {/if}
+      <a href="#pricing" class="btn btn-secondary btn-lg">Get Tools license</a>
     </div>
 
-    <div class="release-quick-meta">
-      <span>Free & Open Source</span>
-      <span class="meta-dot">•</span>
-      <span>Requires macOS 11+, Windows 10+, or Linux</span>
-      <span class="meta-dot">•</span>
-      <a href="#download" class="meta-link">All Downloads & Checksums</a>
-    </div>
+    <p class="hero-note animate-fade" style="animation-delay: 0.5s">
+      Free forever for listening.
+      <a href={LICENSE_WAITLIST_URL} target="_blank" rel="noreferrer">Tools license</a> — one-time, no subscription.
+      Beta builds unlock everything while licensing ships.
+    </p>
+  </div>
 
-    <!-- Trust Badges Bar -->
-    <div class="trust-grid">
-      <div class="trust-item">
-        <HardDrive size={18} class="trust-icon" />
-        <span>100% Local-First & Fast</span>
-      </div>
-      <div class="trust-item">
-        <ShieldCheck size={18} class="trust-icon" />
-        <span>Zero Telemetry & Tracking</span>
-      </div>
-      <div class="trust-item">
-        <SlidersHorizontal size={18} class="trust-icon" />
-        <span>Studio-Grade 10-Band EQ</span>
-      </div>
-      <div class="trust-item">
-        <AudioWaveform size={18} class="trust-icon" />
-        <span>FLAC / ALAC / WAV / MP3</span>
-      </div>
-    </div>
+  <div class="hero-visual animate-fade" style="animation-delay: 0.25s">
+    <img
+      src="./screenshots/hero-playback.png"
+      alt="Phoenix playing a track from a local library"
+      class="hero-shot"
+      width="1280"
+      height="800"
+      fetchpriority="high"
+    />
+    <div class="hero-fade" aria-hidden="true"></div>
   </div>
 </section>
 
 <style>
-  .hero-section {
-    padding-top: 70px;
-    padding-bottom: 50px;
-    text-align: center;
-    position: relative;
-  }
-
-  .hero-container {
+  .hero {
+    padding: 48px 0 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    max-width: 900px;
+    gap: 48px;
+    min-height: calc(100vh - var(--ph-nav-h));
   }
 
-  .hero-badge {
-    margin-bottom: 24px;
-    animation: fadeIn 0.8s ease;
+  .hero-copy {
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 32px;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ph-text-dim);
+    margin-bottom: 20px;
+  }
+
+  .hero-brand {
+    font-family: var(--ph-font-display);
+    font-size: clamp(3.5rem, 12vw, 6.5rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    color: var(--ph-text);
+    margin-bottom: 20px;
   }
 
   .hero-headline {
-    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
-    font-weight: 800;
-    line-height: 1.12;
-    letter-spacing: -0.035em;
-    color: var(--ph-text);
-    margin-bottom: 22px;
-  }
-
-  .accent-text {
-    background: linear-gradient(135deg, var(--ph-accent) 0%, var(--ph-accent-strong) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-decoration: underline;
-    text-decoration-color: var(--ph-accent-border);
-    text-underline-offset: 6px;
-  }
-
-  .hero-subtitle {
-    font-size: clamp(1.05rem, 2vw, 1.25rem);
-    line-height: 1.6;
+    font-family: var(--ph-font-display);
+    font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+    font-weight: 450;
+    letter-spacing: -0.015em;
     color: var(--ph-text-muted);
-    max-width: 740px;
-    margin-bottom: 40px;
+    margin-bottom: 16px;
+    line-height: 1.35;
   }
 
-  .cta-group {
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--ph-text-dim);
+    line-height: 1.65;
+    max-width: 34rem;
+    margin: 0 auto 28px;
+  }
+
+  .cta-row {
     display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 18px;
-    position: relative;
     flex-wrap: wrap;
+    gap: 12px;
     justify-content: center;
+    align-items: flex-start;
   }
 
-  .primary-download-wrapper {
-    display: inline-flex;
+  .primary-download {
     position: relative;
+    display: flex;
   }
 
-  .primary-cta {
+  .primary-download .btn-lg {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    padding-right: 20px;
-    text-align: left;
   }
 
-  .cta-text-wrap {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .cta-main-text {
-    font-size: 1.0625rem;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-
-  .cta-sub-text {
-    font-size: 0.75rem;
-    opacity: 0.8;
-    font-weight: 500;
-  }
-
-  .platform-dropdown-trigger {
+  .platform-toggle {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    border-left: 1px solid rgba(0, 0, 0, 0.15);
-    padding: 0 14px;
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .platform-menu {
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
-    width: 320px;
-    padding: 10px;
+    right: 0;
+    min-width: 240px;
     border-radius: var(--ph-radius-md);
-    box-shadow: var(--ph-shadow-raised);
-    z-index: 50;
+    padding: 8px;
+    box-shadow: var(--ph-shadow-md);
+    z-index: 20;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    text-align: left;
+    gap: 2px;
   }
 
-  .menu-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    color: var(--ph-text-dim);
-    padding: 4px 8px;
-  }
-
-  .platform-menu-item {
+  .platform-option {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
+    flex-direction: column;
+    padding: 10px 12px;
     border-radius: var(--ph-radius-sm);
     text-decoration: none;
     color: var(--ph-text);
-    transition: background 0.15s ease;
+    text-align: left;
   }
 
-  .platform-menu-item:hover {
+  .platform-option:hover:not(.disabled) {
     background: var(--ph-accent-muted);
   }
 
-  .platform-meta {
-    display: flex;
-    flex-direction: column;
+  .platform-option.disabled {
+    opacity: 0.45;
+    cursor: default;
   }
 
-  .platform-name {
-    font-size: 0.875rem;
+  .opt-label {
     font-weight: 600;
+    font-size: 0.9rem;
   }
 
-  .platform-arch {
+  .opt-sub {
     font-size: 0.75rem;
     color: var(--ph-text-muted);
   }
 
-  .platform-ext {
-    font-size: 0.75rem;
-    font-family: var(--ph-font-mono);
-    color: var(--ph-text-dim);
-    background: var(--ph-surface-overlay);
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-
-  .release-quick-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .hero-note {
+    margin-top: 20px;
     font-size: 0.8125rem;
     color: var(--ph-text-dim);
-    margin-bottom: 50px;
-    flex-wrap: wrap;
-    justify-content: center;
+    line-height: 1.55;
+    max-width: 28rem;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .meta-dot {
-    opacity: 0.4;
-  }
-
-  .meta-link {
-    color: var(--ph-text-muted);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .meta-link:hover {
-    color: var(--ph-text);
-  }
-
-  .trust-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    width: 100%;
-    max-width: 960px;
-    padding: 20px;
-    border-radius: var(--ph-radius-lg);
-    background: var(--ph-surface-raised);
-    border: 1px solid var(--ph-border);
-  }
-
-  .trust-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--ph-text-muted);
-  }
-
-  :global(.trust-icon) {
+  .hero-note a {
     color: var(--ph-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-6px); }
-    to { opacity: 1; transform: translateY(0); }
+  .hero-visual {
+    position: relative;
+    width: 100%;
+    margin-top: auto;
+  }
+
+  .hero-shot {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: min(52vh, 560px);
+    object-fit: cover;
+    object-position: top center;
+    border: none;
+  }
+
+  .hero-fade {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      var(--ph-bg) 0%,
+      transparent 18%,
+      transparent 72%,
+      var(--ph-bg) 100%
+    );
   }
 
   @media (max-width: 640px) {
-    .cta-group {
+    .hero {
+      min-height: auto;
+      padding-top: 24px;
+      gap: 32px;
+    }
+
+    .cta-row {
       flex-direction: column;
+      align-items: stretch;
+    }
+
+    .primary-download {
       width: 100%;
     }
-    .primary-download-wrapper {
-      width: 100%;
-    }
-    .primary-cta {
+
+    .primary-download .btn-lg {
       flex: 1;
     }
-    .trust-grid {
-      grid-template-columns: 1fr 1fr;
+
+    .hero-shot {
+      max-height: 40vh;
     }
   }
 </style>
