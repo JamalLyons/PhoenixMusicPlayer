@@ -20,3 +20,8 @@ preview:
 # Run type check across Svelte and TypeScript files
 check:
     pnpm check
+
+# Build production macOS .app and .dmg installer
+release-apple:
+    cd ../app && pnpm tauri build --bundles app,dmg --no-sign -c '{"bundle":{"createUpdaterArtifacts":false}}'
+
